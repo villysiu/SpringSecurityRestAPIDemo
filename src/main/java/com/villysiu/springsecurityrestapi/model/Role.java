@@ -3,7 +3,7 @@ package com.villysiu.springsecurityrestapi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-
+@Data
 @Entity
 @Table
 public class Role {
@@ -13,11 +13,4 @@ public class Role {
 
     private String name;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
