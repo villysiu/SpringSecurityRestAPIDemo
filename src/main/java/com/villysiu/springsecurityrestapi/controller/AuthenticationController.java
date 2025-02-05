@@ -42,16 +42,10 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request){
-
-//        Authentication authenticationRequest = new UsernamePasswordAuthenticationToken(
-//                loginRequest.getEmail(), loginRequest.getPassword());
-//        Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
-
         Authentication authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getEmail(), loginRequest.getPassword());
         Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
 
-        //Add failure excetpio
         SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
 
         HttpSession session = request.getSession();
@@ -59,14 +53,7 @@ public class AuthenticationController {
         return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
     }
 //    https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/index.html#servlet-authentication-unpwd-input
-//    @PostMapping("/login")
-//    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
-//        Authentication authenticationRequest =
-//                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
-//        Authentication authenticationResponse =
-//                this.authenticationManager.authenticate(authenticationRequest);
-//        // ...
-//    }
+
 
 
     @PostMapping("/signup")
@@ -90,6 +77,17 @@ public class AuthenticationController {
         userRepository.save(user);
 
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request){
+        System.out.println("logging out");
+        request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
+        request.getSession().invalidate();
+        SecurityContextHolder.clearContext();
+        return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
+
 
     }
 }

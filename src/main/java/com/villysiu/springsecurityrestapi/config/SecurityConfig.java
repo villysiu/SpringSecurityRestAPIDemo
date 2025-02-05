@@ -1,5 +1,6 @@
 package com.villysiu.springsecurityrestapi.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -36,6 +38,14 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
 
                 )
+//                .logout(logout -> logout
+//                        .logoutUrl("/api/auth/logout")
+//                        .invalidateHttpSession(true) // Invalidate the session
+//                        .clearAuthentication(true) // Clear authentication context
+//                        .deleteCookies("JSESSIONID") // Delete JSESSIONID cookie
+//                        .permitAll() // Allow access to the logout endpoint without authentication
+//                )
+
                 // Enable sessions;
                 .sessionManagement(s -> s
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -46,6 +56,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        System.out.println("in authenticationManager");
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
